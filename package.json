@@ -1,0 +1,36 @@
+{
+  "name": "bericht",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint",
+    "format:check": "prettier \"./src/**/*.{scss,js,jsx,ts,tsx}\" --check ",
+    "format": "prettier \"./src/**/*.{scss,js,jsx,ts,tsx}\" --write",
+    "create:component": "hygen components new --name"
+  },
+  "dependencies": {
+    "@types/node": "20.2.5",
+    "next": "13.0.0",
+    "node-cron": "^3.0.2",
+    "react": "18.2.0",
+    "react-dom": "18.2.0",
+    "wbm": "^1.1.16"
+  },
+  "devDependencies": {
+    "@types/node": "18.11.8",
+    "@types/react": "18.2.7",
+    "@types/react-dom": "18.2.4",
+    "eslint": "8.41.0",
+    "eslint-config-next": "13.4.4",
+    "hygen": "6.2.11",
+    "node-sass-glob-importer": "^5.3.2",
+    "prettier": "^2.8.8",
+    "sass": "^1.55.0",
+    "sass-loader": "^13.1.0",
+    "ts-node": "10.9.1",
+    "typescript": "5.0.4"
+  }
+}

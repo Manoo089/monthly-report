@@ -1,30 +1,20 @@
-import fs from "fs";
-import path from "path";
+import mongoose from "mongoose";
+import dbModels from "../../models/dbModels";
+import mongodb from "../../utils/mongodb";
 
-export const buildDataPath = () => {
-  return path.join(process.cwd(), "data.json");
-};
+export default async function handler(req: any, res: any) {
+  const { method } = req;
+  await mongodb.dbConnect();
 
-export const extractData = (filePath: string) => {
-  const fileData = fs.readFileSync(filePath);
-  const data = JSON.parse(fileData.toString("utf-8"));
-  return data;
-};
-
-export default function handler(req: any, res: any) {
+  console.log(method);
   const stunden = req.body.hours;
 
-  const newFeedback = [
-    {
-      hours: stunden
+  if (method === "PATCH") {
+    try {
+      await dbModels.find({});
+      await dbModels.updateOne({ hours: stunden });
+    } finally {
+      res.send(JSON.stringify("Erfolgreich geupdated"));
     }
-  ];
-
-  const filePath = path.join(process.cwd(), "data.json");
-  const fileData = fs.readFileSync(filePath);
-  const data = JSON.parse(fileData.toString("utf-8"));
-  console.log(data);
-  fs.writeFileSync(filePath, JSON.stringify(newFeedback, null, 2));
-
-  res.status(201).json({ message: "Daten wurden gespeichert!" });
+  }
 }

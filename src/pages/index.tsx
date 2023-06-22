@@ -1,10 +1,13 @@
 import { useEffect, useState } from "react";
 
-import { buildDataPath, extractData, extractStunden } from "./api/getData";
+// import { buildDataPath, extractData, extractStunden } from "./api/getData";
 import { getCurrentMonth } from "../helpers/getMonth";
 import { fetchMethods } from "../helpers/methods";
 
+import mongodb from "../utils/mongodb";
+
 import InputField from "../components/InputField/InputField";
+import dbModels from "../models/dbModels";
 
 interface CurrentData {
   hours: number;
@@ -15,8 +18,9 @@ interface UserInput {
 }
 
 const Home = ({ hours }: any) => {
+  const [isUpdate, setIsUpdate] = useState(false);
   const [currentData, setCurrentData] = useState<CurrentData>({
-    hours: hours
+    hours: hours[0].hours
   });
 
   const [userInput, setUserInput] = useState<UserInput>({
@@ -26,12 +30,17 @@ const Home = ({ hours }: any) => {
   const handleAddHours = () => {
     setCurrentData({ ...currentData, hours: currentData.hours + Number(userInput.inputHours) });
     setUserInput({ inputHours: 0 });
+    setIsUpdate(true);
   };
 
   useEffect(() => {
-    const reqBody = { hours: currentData.hours };
-    fetchMethods("/api/patchData", "PATCH", reqBody);
-  }, [currentData.hours]);
+    if (isUpdate) {
+      const reqBody = { hours: currentData.hours };
+      fetchMethods("/api/patchData", "PATCH", reqBody);
+    } else {
+      return;
+    }
+  }, [currentData.hours, isUpdate]);
 
   return (
     <div>
@@ -50,13 +59,12 @@ const Home = ({ hours }: any) => {
   );
 };
 
-export async function getStaticProps() {
-  const filePath = buildDataPath();
-  const data = extractData(filePath);
-  const stunden = extractStunden(data);
+export async function getServerSideProps() {
+  await mongodb.dbConnect();
+  const hours = await dbModels.find({}).lean();
   return {
     props: {
-      hours: stunden
+      hours: JSON.parse(JSON.stringify(hours))
     }
   };
 }

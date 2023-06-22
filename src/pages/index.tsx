@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
 
-// import { buildDataPath, extractData, extractStunden } from "./api/getData";
 import { getCurrentMonth } from "../helpers/getMonth";
 import { fetchMethods } from "../helpers/methods";
 

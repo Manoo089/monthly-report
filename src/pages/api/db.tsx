@@ -8,6 +8,5 @@ export default async function handler(req: any, res: any) {
   await dbModels.insertMany(jsondb.reach);
   const data = await dbModels.find({});
   await mongodb.dbDisconnect();
-  // res.send({ text: "Daten gespeichert!" });
   res.send(data);
 }

@@ -30,7 +30,7 @@ const Home = ({ hours }: any) => {
 
   useEffect(() => {
     const reqBody = { hours: currentData.hours };
-    fetchMethods("/api/patchData", "PATCH", reqBody);
+    fetchMethods("https://monthly-report.vercel.app/api/patchData", "PATCH", reqBody);
   }, [currentData.hours]);
 
   return (

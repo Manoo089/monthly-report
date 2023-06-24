@@ -46,6 +46,8 @@ const Home = ({ hours }: any) => {
       <h3>Aktueller Monat: {getCurrentMonth()}</h3>
       <h3>Aktuelle Stunden: {currentData.hours}</h3>
 
+      {/* TODO: Aktuelle Abgaben, Aktuelle Videos, Aktuelle Rückbesuche */}
+
       <div className="input">
         <h4>Stunden hinzufügen</h4>
         <InputField

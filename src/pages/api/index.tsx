@@ -13,10 +13,12 @@ export default function handler(req: any, res: any) {
         const message = "Hello from NodeJS";
         await wbm.send(phones, message);
         await wbm.end();
+        await res.send("Erfolgreich!");
         await res.end();
       })
       .catch((err: any) => console.log(err));
   } else {
+    res.status(200).json("Falscher Tag");
     res.end();
-    }
+  }
 }

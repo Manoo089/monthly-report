@@ -5,7 +5,7 @@ export default function handler(req: any, res: any) {
   date.toDateString();
   const day = date.getDate();
 
-  if (day === 24) {
+  if (day === 25) {
     wbm
       .start()
       .then(async () => {

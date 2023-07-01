@@ -1,71 +1,123 @@
 import { useEffect, useState } from "react";
 
+import { formatDate } from "../helpers/formatDate";
 import { getCurrentMonth } from "../helpers/getMonth";
 import { fetchMethods } from "../helpers/methods";
 
-import mongodb from "../utils/mongodb";
+import { Calculator } from "../libs/calculate";
 
-import InputField from "../components/InputField/InputField";
-import dbModels from "../models/dbModels";
+import getData from "./api/getData";
 
-interface CurrentData {
-  hours: number;
+import Card from "../components/Card/Card";
+import CardLayout from "../components/CardLayout/CardLayout";
+
+interface Props {
+  dbData: InitialData;
 }
 
-interface UserInput {
-  inputHours: string | number;
-}
+type InitialData = {
+  id: number;
+  name: string;
+  date: string;
+  counter: number;
+}[];
 
-const Home = ({ hours }: any) => {
-  const [isUpdate, setIsUpdate] = useState(false);
-  const [currentData, setCurrentData] = useState<CurrentData>({
-    hours: hours[0].hours
-  });
+type InitialInputType = {
+  [key: string]: number;
+};
 
-  const [userInput, setUserInput] = useState<UserInput>({
-    inputHours: "0"
-  });
+const INITIAL_INPUT: InitialInputType = {
+  stunden: 0,
+  abgaben: 0,
+  rueckbesuche: 0,
+  videos: 0
+};
 
-  const handleAddHours = () => {
-    setCurrentData({ ...currentData, hours: currentData.hours + Number(userInput.inputHours) });
-    setUserInput({ inputHours: 0 });
+const Home = ({ dbData }: Props) => {
+  const calculate = new Calculator();
+  const [isUpdate, setIsUpdate] = useState<boolean>(false);
+  const [initialData, setInitialData] = useState(dbData);
+  const [updatedData, setUpdatedData] = useState({});
+  const [userInput, setUserInput] = useState<InitialInputType>(INITIAL_INPUT);
+
+  const handleOnIncrease = (e: React.MouseEvent<HTMLButtonElement>) => {
+    const target = e.currentTarget;
+    const currentDateLocal = new Date().toISOString();
+
+    const updatedData = [...initialData];
+    const currentTarget = updatedData.find(el => target.name === el.name);
+    currentTarget!.date = currentDateLocal;
+    currentTarget!.counter = calculate.add(currentTarget!.counter, userInput[target.name]);
+
+    setInitialData(updatedData);
+    setUpdatedData({ ...currentTarget });
+    setUserInput(INITIAL_INPUT);
     setIsUpdate(true);
+  };
+
+  const handleOnDecrease = (e: React.MouseEvent<HTMLButtonElement>) => {
+    const target = e.currentTarget;
+    const currentDateLocal = new Date().toISOString();
+
+    const updatedData = [...initialData];
+    const currentTarget = updatedData.find(el => target.name === el.name);
+    currentTarget!.date = currentDateLocal;
+    currentTarget!.counter = calculate.subtract(currentTarget!.counter, userInput[target.name]);
+
+    setInitialData(updatedData);
+    setUpdatedData({ ...currentTarget });
+    setUserInput(INITIAL_INPUT);
+    setIsUpdate(true);
+  };
+
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const target = e.target;
+    const inputName = target.name;
+
+    setUserInput({
+      ...userInput,
+      [inputName]: e.currentTarget.valueAsNumber
+    });
   };
 
   useEffect(() => {
     if (isUpdate) {
-      const reqBody = { hours: currentData.hours };
-      fetchMethods("/api/patchData", "PATCH", reqBody);
+      fetchMethods("/api/patchData", "PUT", updatedData);
     } else {
       return;
     }
-  }, [currentData.hours, isUpdate]);
+  }, [updatedData, isUpdate]);
 
   return (
     <div>
       <h3>Aktueller Monat: {getCurrentMonth()}</h3>
-      <h3>Aktuelle Stunden: {currentData.hours}</h3>
 
-      {/* TODO: Aktuelle Abgaben, Aktuelle Videos, Aktuelle Rückbesuche */}
-
-      <div className="input">
-        <h4>Stunden hinzufügen</h4>
-        <InputField
-          onChange={e => setUserInput({ ...userInput, inputHours: e.currentTarget.value })}
-          value={userInput.inputHours}
-        />
-      </div>
-      <button onClick={handleAddHours}>Add</button>
+      <CardLayout>
+        {initialData.map((data: any) => {
+          return (
+            <Card
+              key={data.id}
+              counter={data.counter}
+              title={data.name}
+              date={formatDate(data.date)}
+              name={data.name}
+              value={userInput[data.name]}
+              onIncrease={userInput[data.name] !== 0 ? handleOnIncrease : undefined}
+              onDecrease={userInput[data.name] !== 0 ? handleOnDecrease : undefined}
+              onChange={handleInputChange}
+            />
+          );
+        })}
+      </CardLayout>
     </div>
   );
 };
 
 export async function getServerSideProps() {
-  await mongodb.dbConnect();
-  const hours = await dbModels.find({}).lean();
+  const entries = await getData();
   return {
     props: {
-      hours: JSON.parse(JSON.stringify(hours))
+      dbData: JSON.parse(JSON.stringify(entries.rows))
     }
   };
 }

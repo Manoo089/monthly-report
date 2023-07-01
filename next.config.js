@@ -3,7 +3,7 @@ const path = require("path");
 const globImporter = require("node-sass-glob-importer");
 
 const nextConfig = {
-  reactStrictMode: true,
+  reactStrictMode: false,
   swcMinify: true,
 
   sassOptions: {

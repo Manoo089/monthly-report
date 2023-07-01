@@ -4,16 +4,17 @@ import cn from "../../libs/class-name";
 import { Component } from "../../types/component";
 
 export interface Props extends Component {
-  value: number | string;
+  name: string;
+  value?: number | string;
   onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
 }
 
-const InputField = ({ value, onChange, classNames = [] }: Props) => {
+const InputField = ({ name, value, onChange, classNames = [] }: Props) => {
   const ref = useRef<HTMLInputElement>(null);
 
   return (
     <div className={cn("InputField", [], classNames)}>
-      <input ref={ref} type="number" onChange={onChange} onFocus={(e) => e.target.select()} value={value} />
+      <input ref={ref} type="number" name={name} onChange={onChange} onFocus={(e) => e.target.select()} value={value} />
     </div>
   );
 };

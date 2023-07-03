@@ -1,12 +1,13 @@
 import { useRef } from "react";
+import { Component } from "../../types/component";
+import { InputChangeEvent } from "../../types/events";
 
 import cn from "../../libs/class-name";
-import { Component } from "../../types/component";
 
 export interface Props extends Component {
   name: string;
   value?: number | string;
-  onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  onChange?: (e: InputChangeEvent) => void;
 }
 
 const InputField = ({ name, value, onChange, classNames = [] }: Props) => {

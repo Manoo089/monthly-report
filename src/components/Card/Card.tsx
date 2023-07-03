@@ -1,19 +1,20 @@
 import React from "react";
 import cn from "../../libs/class-name";
 import { Component } from "../../types/component";
+import { ButtonOnClickEvent, InputChangeEvent } from "../../types/events";
 
 import Button from "../Button/Button";
 import InputField from "../InputField/InputField";
 
 export interface Props extends Component {
-  counter: number | string;
+  counter: number;
   date: string;
   name: string;
   title: string;
   value: string | number;
-  onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
-  onDecrease?: (e: React.MouseEvent<HTMLButtonElement>) => void;
-  onIncrease?: (e: React.MouseEvent<HTMLButtonElement>) => void;
+  onChange?: (e: InputChangeEvent) => void;
+  onDecrease?: (e: ButtonOnClickEvent) => void;
+  onIncrease?: (e: ButtonOnClickEvent) => void;
 }
 
 const Card = ({ counter, date, title, name, value, classNames, onChange, onDecrease, onIncrease }: Props) => {
@@ -33,8 +34,8 @@ const Card = ({ counter, date, title, name, value, classNames, onChange, onDecre
         </div>
 
         <div className="Card__options-buttons">
-          <Button label="-" name={name} onClick={onDecrease} />
-          <Button label="+" name={name} onClick={onIncrease} />
+          <Button id="decrease" label="-" name={name} onClick={onDecrease} />
+          <Button id="increase" label="+" name={name} onClick={onIncrease} />
         </div>
       </div>
     </div>

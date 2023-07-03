@@ -1,36 +1,28 @@
 import React from "react";
 import cn from "../../libs/class-name";
 import { Component } from "../../types/component";
-import { motion, useAnimate } from "framer-motion";
+import { ButtonOnClickEvent } from "../../types/events";
+import { useAnimate } from "framer-motion";
+import { pressedButtonAnimation } from "../../libs/animations";
 
 export interface Props extends Component {
+  id: string;
   name: string;
   label: string;
-  onClick?: (e: React.MouseEvent<HTMLButtonElement>) => void;
+  onClick?: (e: ButtonOnClickEvent) => void;
 }
 
-const Button = ({ name, label, classNames, onClick }: Props) => {
+const Button = ({ id, name, label, classNames, onClick }: Props) => {
   const [scope, animate] = useAnimate();
 
-  function sequence() {
-    animate(
-      [
-        [scope.current, { scale: 0.95, boxShadow: "0 0 0 0 rgba(0, 0, 0, 0.7)" }],
-        [scope.current, { scale: 1, boxShadow: "0 0 0 10px rgba(0, 0, 0, 0)" }],
-        [scope.current, { scale: 0.95, boxShadow: "0 0 0 0 rgba(0, 0, 0, 0)" }]
-      ],
-      { duration: 0.3 }
-    );
-  }
-
-  const handleOnClick = (e: React.MouseEvent<HTMLButtonElement>) => {
+  const handleOnClick = (e: ButtonOnClickEvent) => {
     onClick?.(e);
-    sequence();
+    pressedButtonAnimation(animate, scope);
   };
 
   return (
     <>
-      <button ref={scope} className={cn("Button", [], classNames)} name={name} onClick={handleOnClick}>
+      <button ref={scope} className={cn("Button", [], classNames)} id={id} name={name} onClick={handleOnClick}>
         {label}
       </button>
     </>

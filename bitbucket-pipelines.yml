@@ -1,0 +1,8 @@
+definitions:
+  caches:
+    nextcache: .next/cache
+    - step:
+    name: your_step_name
+    caches:
+      - node
+      - nextcache

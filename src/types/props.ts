@@ -3,6 +3,7 @@ export type InitialData = {
   name: string;
   date: string;
   counter: number;
+  owner: any;
 }[];
 
 export type InitialInputType = {

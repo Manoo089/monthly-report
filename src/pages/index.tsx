@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { getSession } from "next-auth/react";
 
 import { ButtonOnClickEvent, InputChangeEvent } from "../types/events";
 import { InitialInputType, InitialData } from "../types/props";
@@ -7,7 +8,7 @@ import { formatDate } from "../helpers/formatDate";
 import { getCurrentMonth } from "../helpers/getMonth";
 import { fetchMethods } from "../helpers/methods";
 
-import { Calculator } from "../libs/calculate";
+import { Calculator } from "../lib/calculate";
 
 import getData from "./api/getData";
 
@@ -63,7 +64,7 @@ const Home = ({ dbData }: Props) => {
 
   useEffect(() => {
     if (isUpdate) {
-      fetchMethods("/api/patchData", "PUT", updatedData);
+      fetchMethods("/api/user/patchData", "PUT", updatedData);
     } else {
       return;
     }
@@ -80,7 +81,7 @@ const Home = ({ dbData }: Props) => {
               key={data.id}
               counter={data.counter}
               title={data.name}
-              date={formatDate(data.date)}
+              date={data.date ? formatDate(data.date) : ""}
               name={data.name}
               value={userInput[data.name]}
               onIncrease={handleOnClickButton}
@@ -94,11 +95,23 @@ const Home = ({ dbData }: Props) => {
   );
 };
 
-export async function getServerSideProps() {
-  const entries = await getData();
+export async function getServerSideProps(context: any) {
+  const session = await getSession({ req: context.req });
+
+  if (!session) {
+    return {
+      redirect: {
+        destination: "/auth",
+        permanent: false
+      }
+    };
+  }
+
+  const entries = await getData(session.user!.email);
   return {
     props: {
-      dbData: JSON.parse(JSON.stringify(entries.rows))
+      dbData: JSON.parse(JSON.stringify(entries.rows)),
+      session
     }
   };
 }

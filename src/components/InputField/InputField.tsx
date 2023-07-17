@@ -1,22 +1,19 @@
-import { useRef } from "react";
-import { Component } from "../../types/component";
-import { InputChangeEvent } from "../../types/events";
+import React from "react";
+import Box from "@mui/material/Box";
+import TextField from "@mui/material/TextField";
 
-import cn from "../../libs/class-name";
-
-export interface Props extends Component {
-  name: string;
-  value?: number | string;
-  onChange?: (e: InputChangeEvent) => void;
+interface Props {
+  id: string;
+  label: string;
+  required?: boolean;
+  type: string;
 }
 
-const InputField = ({ name, value, onChange, classNames = [] }: Props) => {
-  const ref = useRef<HTMLInputElement>(null);
-
+const InputField = ({ id, label, required = false, type }: Props) => {
   return (
-    <div className={cn("InputField", [], classNames)}>
-      <input ref={ref} type="number" name={name} onChange={onChange} onFocus={(e) => e.target.select()} value={value} />
-    </div>
+    <Box mt={3}>
+      <TextField type={type} id={id} label={label} variant="standard" required={required} autoFocus />
+    </Box>
   );
 };
 

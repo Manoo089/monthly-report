@@ -1,9 +1,9 @@
 import React from "react";
-import cn from "../../libs/class-name";
+import cn from "../../lib/class-name";
 import { Component } from "../../types/component";
 import { ButtonOnClickEvent } from "../../types/events";
 import { useAnimate } from "framer-motion";
-import { pressedButtonAnimation } from "../../libs/animations";
+import { pressedButtonAnimation } from "../../lib/animations";
 
 export interface Props extends Component {
   id: string;

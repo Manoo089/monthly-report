@@ -1,5 +1,18 @@
 .Layout {
-  display: flex;
-  justify-content: center;
-  align-items: center;
+  width: 100%;
+  display: grid;
+  grid-template-areas:
+    "head head head"
+    "main main main";
+  grid-template-rows: 1fr;
+  grid-template-columns: 1fr;
+
+  & header {
+    grid-area: head;
+  }
+  
+  & main {
+    grid-area: main;
+    justify-self: center;
+  }
 }

@@ -1,10 +1,10 @@
 import React from "react";
-import cn from "../../libs/class-name";
+import cn from "../../lib/class-name";
 import { Component } from "../../types/component";
 import { ButtonOnClickEvent, InputChangeEvent } from "../../types/events";
 
 import Button from "../Button/Button";
-import InputField from "../InputField/InputField";
+import TextField from "@mui/material/TextField";
 
 export interface Props extends Component {
   counter: number;
@@ -25,11 +25,24 @@ const Card = ({ counter, date, title, name, value, classNames, onChange, onDecre
 
       <div className="Card__options">
         <div className="Card__options-input">
-          <InputField onChange={onChange} value={value} name={name} />
+          <TextField
+            type="number"
+            onChange={onChange}
+            value={value}
+            name={name}
+            onFocus={e => e.target.select()}
+            variant="standard"
+            sx={{
+              "& .MuiInputBase-root::before": { borderBottomColor: "white" },
+              "& .MuiInputBase-root::before::hover": { borderBottomColor: "white", color: "white" },
+              "& .MuiInputBase-root::after": { borderBottomColor: "green" },
+              "& input": { textAlign: "center", color: "whitesmoke" }
+            }}
+          />
         </div>
 
         <div className="Card__options-lastChange">
-          <p>Zuletzt geändert am: </p>
+          {date && <p>Zuletzt geändert am: </p>}
           {date}
         </div>
 

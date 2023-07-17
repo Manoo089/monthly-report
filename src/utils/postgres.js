@@ -1,4 +1,4 @@
-import { Client } from "pg";
+import { Client, Connection } from "pg";
 
 const client = new Client({
   host: process.env.DB_HOST,
@@ -8,6 +8,7 @@ const client = new Client({
   database: process.env.DB_DATABASE,
   ssl: false
 });
+
 client.connect();
 
 export default client;

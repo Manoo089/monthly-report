@@ -1,5 +1,5 @@
 import React from "react";
-import cn from "../../libs/class-name";
+import cn from "../../lib/class-name";
 import { Component } from "../../types/component";
 
 export interface Props extends Component {

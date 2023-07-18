@@ -5,7 +5,7 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
-    "start": "next start",
+    "start": "next start --port 10000",
     "lint": "next lint",
     "format:check": "prettier \"./src/**/*.{scss,js,jsx,ts,tsx}\" --check ",
     "format": "prettier \"./src/**/*.{scss,js,jsx,ts,tsx}\" --write",
